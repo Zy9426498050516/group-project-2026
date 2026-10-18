@@ -102,14 +102,14 @@ xiaolanjing
 
 ## 六、修改数据库密码
 
-如果你的 MySQL root 密码不是 `123456`，请打开
+如果你的 MySQL root 密码不是 `root`，请打开
 `src/main/resources/application.yml`，修改这两行：
 
 ```yaml
 spring:
   datasource:
     username: root        # 改成你的 MySQL 用户名
-    password: 123456      # 改成你的 MySQL 密码
+    password: root      # 改成你的 MySQL 密码
 ```
 
 ---
