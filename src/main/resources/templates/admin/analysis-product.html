@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('商品分析')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('analysis-product')}"></aside>
+    <main class="admin-main">
+        <h2>🛍️ 商品分析</h2>
+        <div class="stat-grid">
+            <div class="stat-card blue"><div class="stat-icon">🛍️</div><div><div class="num" th:text="${productCount}">0</div><div class="label">商品总数</div></div></div>
+        </div>
+        <div class="dash-row">
+            <div class="dash-panel">
+                <h3>🔥 销量排行 TOP10</h3>
+                <table class="table">
+                    <thead><tr><th>商品</th><th>销量</th><th>销售额</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${topProducts}">
+                        <td th:text="${row.name}">商品</td>
+                        <td th:text="${row.qty}">销量</td>
+                        <td th:text="'¥' + ${row.amount}">销售额</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dash-panel">
+                <h3>⚠️ 库存不足商品（库存 &lt; 20）</h3>
+                <table class="table">
+                    <thead><tr><th>商品</th><th>库存</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${lowStock}">
+                        <td th:text="${p.name}">商品</td>
+                        <td th:text="${p.stock}">库存</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

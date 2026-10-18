@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('首页')}"></head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" th:href="@{/}"><span class="whale">🐳</span>小蓝鲸商城</a>
+        <div class="nav-links">
+            <a th:href="@{/cart}">🛒 我的购物车</a>
+            <th:block th:if="${session.loginCustomer == null}">
+                <a th:href="@{/login}">👤 顾客登录</a>
+            </th:block>
+            <th:block th:if="${session.loginCustomer != null}">
+                <span style="color:#fff" th:text="'你好，' + ${session.loginCustomer.username}">你好</span>
+                <a th:href="@{/logout}">退出</a>
+            </th:block>
+            <a th:href="@{/admin/login}">🔧 管理员</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 轮播图（全宽，建议 1920×450） -->
+<div class="carousel" th:if="${banners != null and !banners.isEmpty()}">
+    <div class="carousel-slides" id="carousel">
+        <div class="carousel-item" th:each="b, st : ${banners}"
+             th:classappend="${st.first} ? 'active' : ''">
+            <img th:if="${b.image != null and !b.image.isEmpty()}" th:src="${b.image}" th:alt="${b.title}">
+            <div class="empty" th:if="${b.image == null or b.image.isEmpty()}" th:text="${b.title}">海报</div>
+        </div>
+    </div>
+    <button class="carousel-btn carousel-prev" onclick="moveSlide(-1)">‹</button>
+    <button class="carousel-btn carousel-next" onclick="moveSlide(1)">›</button>
+    <div class="carousel-dots" id="dots"></div>
+</div>
+<div class="carousel" th:if="${banners == null or banners.isEmpty()}">
+    <div class="empty">🐳 欢迎来到小蓝鲸商城，管理员可在后台添加活动海报～</div>
+</div>
+
+<div class="container">
+
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+        <span class="label">🔍 按品牌搜索</span>
+        <form th:action="@{/}" method="get" style="flex:1; display:flex; gap:10px;">
+            <input class="search-input" type="text" name="brand" placeholder="输入品牌名，例如：小蓝鲸"
+                   th:value="${keyword}">
+            <button class="btn" type="submit">搜索</button>
+        </form>
+        <div class="brand-chips">
+            <a class="chip" th:href="@{/}">全部</a>
+            <a class="chip" th:each="b : ${brands}" th:href="@{/(brand=${b.name})}" th:text="${b.name}">品牌</a>
+        </div>
+    </div>
+
+    <!-- 商品列表 -->
+    <h2 class="section-title">🛍️ 热卖商品</h2>
+    <div class="product-grid" th:if="${products != null and !products.isEmpty()}">
+        <div class="product-card" th:each="p : ${products}">
+            <div class="product-img">
+                <img th:if="${p.image != null and !p.image.isEmpty()}" th:src="${p.image}" th:alt="${p.name}">
+                <span class="placeholder" th:if="${p.image == null or p.image.isEmpty()}">🐳</span>
+            </div>
+            <div class="product-body">
+                <div class="product-name" th:text="${p.name}">商品名</div>
+                <div class="product-brand" th:text="${p.brandName}">品牌</div>
+                <div class="product-meta">
+                    <span class="product-price" th:text="${p.price}">0.00</span>
+                    <span class="product-stock" th:text="'库存 ' + ${p.stock}">库存 0</span>
+                </div>
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="productId" th:value="${p.id}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button class="btn btn-block" type="submit">加入购物车 🛒</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="empty-tip" th:if="${products == null or products.isEmpty()}">
+        🐳 没有找到相关商品哦～
+    </div>
+
+</div>
+
+<div class="footer">小蓝鲸商城 · 蓝色可爱主题 · 智能软件开发作业</div>
+
+<script>
+    // 轮播图逻辑
+    let index = 0;
+    const items = document.querySelectorAll('.carousel-item');
+    const dotsBox = document.getElementById('dots');
+
+    if (items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
+            const d = document.createElement('span');
+            d.className = 'dot' + (i === 0 ? ' active' : '');
+            d.onclick = () => show(i);
+            dotsBox.appendChild(d);
+        }
+        setInterval(() => moveSlide(1), 4000);
+    }
+
+    function show(i) {
+        index = (i + items.length) % items.length;
+        items.forEach((el, k) => el.classList.toggle('active', k === index));
+        document.querySelectorAll('.dot').forEach((d, k) => d.classList.toggle('active', k === index));
+    }
+
+    function moveSlide(step) {
+        show(index + step);
+    }
+</script>
+
+</body>
+</html>

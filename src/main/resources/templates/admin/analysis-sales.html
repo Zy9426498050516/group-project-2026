@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('销售统计')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('analysis-sales')}"></aside>
+    <main class="admin-main">
+        <h2>📈 销售统计</h2>
+        <div class="stat-grid">
+            <div class="stat-card blue"><div class="stat-icon">📦</div><div><div class="num" th:text="${totalOrders}">0</div><div class="label">订单总数</div></div></div>
+            <div class="stat-card green"><div class="stat-icon">💵</div><div><div class="num" th:text="'¥' + ${totalSales}">0</div><div class="label">销售总额</div></div></div>
+            <div class="stat-card orange"><div class="stat-icon">📅</div><div><div class="num" th:text="${todayOrders}">0</div><div class="label">今日订单</div></div></div>
+            <div class="stat-card pink"><div class="stat-icon">💰</div><div><div class="num" th:text="'¥' + ${todaySales}">0</div><div class="label">今日销售额</div></div></div>
+        </div>
+        <div class="dash-row">
+            <div class="dash-panel">
+                <h3>📊 订单状态分布</h3>
+                <table class="table">
+                    <thead><tr><th>状态</th><th>订单数</th><th>金额</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${statusStats}">
+                        <td th:text="${row.status}">状态</td>
+                        <td th:text="${row.cnt}">数量</td>
+                        <td th:text="'¥' + ${row.amount}">金额</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dash-panel">
+                <h3>📅 近 7 天销售趋势</h3>
+                <table class="table">
+                    <thead><tr><th>日期</th><th>订单数</th><th>销售额</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${trend}">
+                        <td th:text="${row.d}">日期</td>
+                        <td th:text="${row.cnt}">数量</td>
+                        <td th:text="'¥' + ${row.amount}">金额</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

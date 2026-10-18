@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('数据备份')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('backup')}"></aside>
+    <main class="admin-main">
+        <h2>💾 数据备份</h2>
+        <div class="table-card" style="padding:20px; margin-bottom:20px; max-width:720px;">
+            <p>当前数据库 <strong>xiaolanjing</strong> 共包含 <strong th:text="${#lists.size(tables)}">0</strong> 张表。</p>
+            <p style="color:#8aa0b8; font-size:13px; margin-top:8px;">💡 提示：实际备份/恢复请使用 Navicat 的「转储 SQL 文件 / 运行 SQL 文件」功能，操作更安全可靠。</p>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>表名</th><th>数据行数（约）</th></tr></thead>
+                <tbody>
+                <tr th:each="t : ${tables}">
+                    <td th:text="${t.name}">表名</td>
+                    <td th:text="${t.rows}">行数</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

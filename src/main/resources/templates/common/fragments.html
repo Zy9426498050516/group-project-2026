@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - 小蓝鲸商城'">小蓝鲸商城</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- 后台顶部导航栏 -->
+<header class="admin-header" th:fragment="admin-header">
+    <div class="admin-header-title">🐳 小蓝鲸商城 · 后台管理</div>
+    <div class="admin-header-right">
+        <span class="avatar">🐳</span>
+        <span class="admin-name" th:text="${session.loginAdmin.username}">admin</span>
+        <a th:href="@{/}">🌊 返回商城</a>
+        <a th:href="@{/admin/logout}">🚪 退出登录</a>
+    </div>
+</header>
+
+<!-- 管理员后台左侧导航（多级菜单） -->
+<div class="admin-sidebar" th:fragment="admin-sidebar(active)">
+    <a class="menu-link" th:href="@{/admin}" th:classappend="${active == 'dashboard'} ? 'active' : ''">📊 仪表盘</a>
+
+    <details class="menu-group" th:attr="open=${(active == 'product' or active == 'category' or active == 'brand') ? 'open' : null}">
+        <summary>🛍️ 商品管理</summary>
+        <a th:href="@{/admin/product}" th:classappend="${active == 'product'} ? 'active' : ''">商品列表</a>
+        <a th:href="@{/admin/category}" th:classappend="${active == 'category'} ? 'active' : ''">分类管理</a>
+        <a th:href="@{/admin/brand}" th:classappend="${active == 'brand'} ? 'active' : ''">品牌管理</a>
+    </details>
+
+    <details class="menu-group" th:attr="open=${(active == 'analysis-sales' or active == 'analysis-user' or active == 'analysis-product') ? 'open' : null}">
+        <summary>📈 数据分析</summary>
+        <a th:href="@{/admin/analysis/sales}" th:classappend="${active == 'analysis-sales'} ? 'active' : ''">销售统计</a>
+        <a th:href="@{/admin/analysis/user}" th:classappend="${active == 'analysis-user'} ? 'active' : ''">用户分析</a>
+        <a th:href="@{/admin/analysis/product}" th:classappend="${active == 'analysis-product'} ? 'active' : ''">商品分析</a>
+    </details>
+
+    <a class="menu-link" th:href="@{/admin/sales}" th:classappend="${active == 'sales'} ? 'active' : ''">💰 销售管理</a>
+
+    <details class="menu-group" th:attr="open=${(active == 'banner' or active == 'announcement') ? 'open' : null}">
+        <summary>📝 内容管理</summary>
+        <a th:href="@{/admin/banner}" th:classappend="${active == 'banner'} ? 'active' : ''">海报轮播管理</a>
+        <a th:href="@{/admin/announcement}" th:classappend="${active == 'announcement'} ? 'active' : ''">公告管理</a>
+    </details>
+
+    <details class="menu-group" th:attr="open=${active == 'order'} ? 'open' : null">
+        <summary>📦 订单管理</summary>
+        <a th:href="@{/admin/order}" th:classappend="${active == 'order'} ? 'active' : ''">订单列表</a>
+    </details>
+
+    <details class="menu-group" th:attr="open=${(active == 'store-review' or active == 'store-mine' or active == 'coupon' or active == 'store-category' or active == 'store-brand' or active == 'full-reduction') ? 'open' : null}">
+        <summary>🏪 商家入驻</summary>
+        <a th:href="@{/admin/store/review}" th:classappend="${active == 'store-review'} ? 'active' : ''">同行商家审核</a>
+        <a th:href="@{/admin/store/mine}" th:classappend="${active == 'store-mine'} ? 'active' : ''">我的店铺</a>
+        <a th:href="@{/admin/coupon}" th:classappend="${active == 'coupon'} ? 'active' : ''">优惠券管理</a>
+        <a th:href="@{/admin/store-meta/category}" th:classappend="${active == 'store-category'} ? 'active' : ''">店铺分类</a>
+        <a th:href="@{/admin/store-meta/brand}" th:classappend="${active == 'store-brand'} ? 'active' : ''">店铺品牌</a>
+        <a th:href="@{/admin/full-reduction}" th:classappend="${active == 'full-reduction'} ? 'active' : ''">满减活动</a>
+    </details>
+
+    <details class="menu-group" th:attr="open=${(active == 'profile' or active == 'message' or active == 'setting') ? 'open' : null}">
+        <summary>👤 个人中心</summary>
+        <a th:href="@{/admin/profile}" th:classappend="${active == 'profile'} ? 'active' : ''">我的资料</a>
+        <a th:href="@{/admin/profile/message}" th:classappend="${active == 'message'} ? 'active' : ''">消息通知</a>
+        <a th:href="@{/admin/profile/setting}" th:classappend="${active == 'setting'} ? 'active' : ''">系统设置</a>
+    </details>
+
+    <details class="menu-group" th:attr="open=${(active == 'admin-list' or active == 'user-list' or active == 'shipping' or active == 'express' or active == 'log' or active == 'backup' or active == 'migrate') ? 'open' : null}">
+        <summary>⚙️ 运维管理</summary>
+        <a th:href="@{/admin/ops/admin}" th:classappend="${active == 'admin-list'} ? 'active' : ''">管理员管理</a>
+        <a th:href="@{/admin/ops/user}" th:classappend="${active == 'user-list'} ? 'active' : ''">用户管理</a>
+        <a th:href="@{/admin/ops/shipping}" th:classappend="${active == 'shipping'} ? 'active' : ''">运费模板</a>
+        <a th:href="@{/admin/ops/express}" th:classappend="${active == 'express'} ? 'active' : ''">快递公司</a>
+        <a th:href="@{/admin/ops/log}" th:classappend="${active == 'log'} ? 'active' : ''">操作日志</a>
+        <a th:href="@{/admin/ops/backup}" th:classappend="${active == 'backup'} ? 'active' : ''">数据备份</a>
+        <a th:href="@{/admin/ops/migrate}" th:classappend="${active == 'migrate'} ? 'active' : ''">数据迁移</a>
+    </details>
+</div>
+
+</body>
+</html>

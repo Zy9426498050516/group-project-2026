@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 请把 root / 123456 改成你自己的 MySQL 账号密码
+    url: jdbc:mysql://localhost:3306/xiaolanjing?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  thymeleaf:
+    cache: false          # 开发阶段关闭缓存，改页面即时生效
+    mode: HTML
+    encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 10MB     # 图片上传大小限制
+      max-request-size: 10MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.xiaolanjing.entity,org.xiaolanjing.vo
+  configuration:
+    map-underscore-to-camel-case: true   # 自动把 user_name 映射成 userName
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # 控制台打印 SQL，方便调试
+
+# 上传图片保存目录（相对项目根目录），运行时自动创建 upload 文件夹
+file:
+  upload-dir: ./upload

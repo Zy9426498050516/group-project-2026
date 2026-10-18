@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('满减活动')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('full-reduction')}"></aside>
+    <main class="admin-main">
+        <div class="toolbar">
+            <h2>🎁 满减活动</h2>
+            <a class="btn" th:href="@{/admin/full-reduction/add}">➕ 新增活动</a>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>活动名称</th><th>满</th><th>减</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="f : ${list}">
+                    <td th:text="${f.id}">1</td>
+                    <td th:text="${f.name}">名称</td>
+                    <td th:text="'¥' + ${f.fullAmount}">满</td>
+                    <td th:text="'¥' + ${f.reduceAmount}">减</td>
+                    <td th:text="${f.status == 1 ? '✅ 启用' : '⛔ 停用'}">状态</td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn btn-sm" th:href="@{/admin/full-reduction/edit/{id}(id=${f.id})}">编辑</a>
+                            <a class="btn btn-sm btn-danger" th:href="@{/admin/full-reduction/delete/{id}(id=${f.id})}" onclick="return confirm('确定删除？')">删除</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

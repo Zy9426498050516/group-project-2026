@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('订单详情')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('order')}"></aside>
+    <main class="admin-main">
+        <h2>📦 订单详情</h2>
+        <div class="table-card" style="padding:24px; margin-bottom:20px; max-width:720px;">
+            <p><strong>订单号：</strong><span th:text="${order.orderNo}"></span></p>
+            <p><strong>顾客：</strong><span th:text="${order.customerName}"></span></p>
+            <p><strong>状态：</strong><span th:text="${order.status}"></span></p>
+            <p><strong>收货人：</strong><span th:text="${order.receiver}"></span></p>
+            <p><strong>电话：</strong><span th:text="${order.phone}"></span></p>
+            <p><strong>地址：</strong><span th:text="${order.address}"></span></p>
+            <p><strong>下单时间：</strong><span th:text="${order.createTime}"></span></p>
+            <p><strong>总金额：</strong><span class="num" style="color:#ff6b81; font-size:20px; font-weight:800;" th:text="'¥' + ${order.totalAmount}"></span></p>
+        </div>
+        <h3>商品明细</h3>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th></tr></thead>
+                <tbody>
+                <tr th:each="i : ${items}">
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img class="thumb" th:if="${i.productImage != null and !i.productImage.isEmpty()}" th:src="${i.productImage}" alt="">
+                            <span class="thumb-placeholder" th:if="${i.productImage == null or i.productImage.isEmpty()}">🐳</span>
+                            <span th:text="${i.productName}">商品</span>
+                        </div>
+                    </td>
+                    <td th:text="'¥' + ${i.price}">单价</td>
+                    <td th:text="${i.quantity}">数量</td>
+                    <td th:text="'¥' + ${i.price * i.quantity}">小计</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:16px;"><a class="btn btn-gray" th:href="@{/admin/order}">返回列表</a></div>
+    </main>
+</div>
+</body>
+</html>

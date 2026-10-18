@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('我的店铺')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('store-mine')}"></aside>
+    <main class="admin-main">
+        <h2>🏪 我的店铺</h2>
+        <div class="table-card" style="padding:24px; max-width:560px;">
+            <form th:action="@{/admin/store/mine/update}" method="post">
+                <input type="hidden" name="id" th:value="${store.id}">
+                <div class="form-group"><label>店铺名称</label><input class="form-control" type="text" name="name" th:value="${store.name}" required></div>
+                <div class="form-group"><label>店主姓名</label><input class="form-control" type="text" name="ownerName" th:value="${store.ownerName}"></div>
+                <div class="form-group"><label>联系电话</label><input class="form-control" type="text" name="phone" th:value="${store.phone}"></div>
+                <button class="btn" type="submit">💾 保存店铺信息</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

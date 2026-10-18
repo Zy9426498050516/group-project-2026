@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('店铺品牌')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('store-brand')}"></aside>
+    <main class="admin-main">
+        <h2>🏷️ 店铺品牌</h2>
+        <div class="table-card" style="padding:20px; margin-bottom:20px; max-width:640px;">
+            <form th:action="@{/admin/store-meta/brand/add}" method="post" style="display:flex; gap:10px;">
+                <input class="form-control" style="flex:1;" type="text" name="name" placeholder="品牌名称" required>
+                <input class="form-control" style="width:90px;" type="number" name="sortOrder" value="0">
+                <button class="btn" type="submit">➕ 新增</button>
+            </form>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>品牌名称</th><th>排序</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="b : ${list}">
+                    <td th:text="${b.id}">1</td>
+                    <td>
+                        <form th:action="@{/admin/store-meta/brand/update}" method="post" style="display:flex; gap:8px;">
+                            <input type="hidden" name="id" th:value="${b.id}">
+                            <input class="form-control" style="width:180px;" type="text" name="name" th:value="${b.name}" required>
+                            <input class="form-control" style="width:70px;" type="number" name="sortOrder" th:value="${b.sortOrder}">
+                            <button class="btn btn-sm" type="submit">保存</button>
+                        </form>
+                    </td>
+                    <td th:text="${b.sortOrder}">0</td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{/admin/store-meta/brand/delete/{id}(id=${b.id})}" onclick="return confirm('确定删除？')">删除</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

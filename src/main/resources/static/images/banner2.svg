@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="450" viewBox="0 0 1920 450">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e90ff"/>
+      <stop offset="100%" stop-color="#7cc8ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="450" fill="url(#bg2)"/>
+  <circle cx="300" cy="360" r="100" fill="#ffffff" opacity="0.16"/>
+  <circle cx="1620" cy="120" r="70" fill="#ffffff" opacity="0.16"/>
+  <circle cx="1750" cy="320" r="50" fill="#ffffff" opacity="0.12"/>
+  <text x="960" y="210" font-family="sans-serif" font-size="74" font-weight="bold" fill="#ffffff" text-anchor="middle">🐬 萌宠好物节</text>
+  <text x="960" y="292" font-family="sans-serif" font-size="40" fill="#eaf6ff" text-anchor="middle">可爱单品 全场包邮 手慢无</text>
+</svg>

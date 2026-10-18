@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('管理员管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('admin-list')}"></aside>
+    <main class="admin-main">
+        <h2>🛡️ 管理员管理</h2>
+        <div class="table-card" style="padding:20px; margin-bottom:20px; max-width:640px;">
+            <div class="error-msg" th:if="${error}" th:text="${error}"></div>
+            <form th:action="@{/admin/ops/admin/add}" method="post" style="display:flex; gap:10px;">
+                <input class="form-control" style="flex:1;" type="text" name="username" placeholder="管理员账号" required>
+                <input class="form-control" style="flex:1;" type="password" name="password" placeholder="密码" required>
+                <button class="btn" type="submit">➕ 新增</button>
+            </form>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>账号</th><th>创建时间</th><th>重置密码</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="a : ${admins}">
+                    <td th:text="${a.id}">1</td>
+                    <td th:text="${a.username}">账号</td>
+                    <td th:text="${a.createTime}">时间</td>
+                    <td>
+                        <form th:action="@{/admin/ops/admin/reset}" method="post" style="display:flex; gap:8px;">
+                            <input type="hidden" name="id" th:value="${a.id}">
+                            <input class="form-control" style="width:140px;" type="text" name="password" placeholder="新密码" required>
+                            <button class="btn btn-sm" type="submit">重置</button>
+                        </form>
+                    </td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{/admin/ops/admin/delete/{id}(id=${a.id})}" onclick="return confirm('确定删除该管理员？')">删除</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('品牌管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('brand')}"></aside>
+    <main class="admin-main">
+        <h2>🏷️ 品牌管理</h2>
+
+        <div class="table-card" style="padding: 20px; margin-bottom: 20px; max-width: 560px;">
+            <div class="error-msg" th:if="${error}" th:text="${error}">错误信息</div>
+            <form th:action="@{/admin/brand/add}" method="post" style="display:flex; gap:10px;">
+                <input class="form-control" type="text" name="name" placeholder="输入新品牌名" required>
+                <button class="btn" type="submit">➕ 新增</button>
+            </form>
+        </div>
+
+        <div class="table-card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>品牌名</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b : ${brands}">
+                    <td th:text="${b.id}">1</td>
+                    <td>
+                        <form th:action="@{/admin/brand/update}" method="post" style="display:flex; gap:8px; align-items:center;">
+                            <input type="hidden" name="id" th:value="${b.id}">
+                            <input class="form-control" style="width: 180px;" type="text" name="name" th:value="${b.name}" required>
+                            <button class="btn btn-sm" type="submit">保存</button>
+                        </form>
+                    </td>
+                    <td th:text="${b.createTime}">时间</td>
+                    <td>
+                        <a class="btn btn-sm btn-danger" th:href="@{/admin/brand/delete/{id}(id=${b.id})}"
+                           onclick="return confirm('删除品牌后，该品牌下的商品将不再显示品牌名，确定删除吗？')">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

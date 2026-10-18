@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('优惠券管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('coupon')}"></aside>
+    <main class="admin-main">
+        <div class="toolbar">
+            <h2>🎟️ 优惠券管理</h2>
+            <a class="btn" th:href="@{/admin/coupon/add}">➕ 新增优惠券</a>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>名称</th><th>面额</th><th>使用门槛</th><th>数量</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="c : ${coupons}">
+                    <td th:text="${c.id}">1</td>
+                    <td th:text="${c.name}">名称</td>
+                    <td th:text="'¥' + ${c.amount}">面额</td>
+                    <td th:text="'满 ¥' + ${c.minAmount}">门槛</td>
+                    <td th:text="${c.totalCount}">数量</td>
+                    <td th:text="${c.status == 1 ? '✅ 启用' : '⛔ 停用'}">状态</td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn btn-sm" th:href="@{/admin/coupon/edit/{id}(id=${c.id})}">编辑</a>
+                            <a class="btn btn-sm btn-danger" th:href="@{/admin/coupon/delete/{id}(id=${c.id})}" onclick="return confirm('确定删除？')">删除</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

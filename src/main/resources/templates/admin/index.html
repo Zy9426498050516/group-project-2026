@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('后台首页')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('dashboard')}"></aside>
+    <main class="admin-main">
+
+        <!-- 欢迎横幅 -->
+        <div class="welcome-banner">
+            <div>
+                <h2 th:text="'欢迎回来，' + ${session.loginAdmin.username} + '！'">欢迎回来</h2>
+                <p>今天也要元气满满地管理小蓝鲸商城哦～ 🐳</p>
+            </div>
+            <div class="welcome-whale">🐳</div>
+        </div>
+
+        <!-- 数据统计卡片 -->
+        <div class="stat-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">🛍️</div>
+                <div>
+                    <div class="num" th:text="${productCount}">0</div>
+                    <div class="label">商品总数</div>
+                </div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">🏷️</div>
+                <div>
+                    <div class="num" th:text="${brandCount}">0</div>
+                    <div class="label">品牌总数</div>
+                </div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-icon">🖼️</div>
+                <div>
+                    <div class="num" th:text="${bannerCount}">0</div>
+                    <div class="label">轮播海报</div>
+                </div>
+            </div>
+            <div class="stat-card pink">
+                <div class="stat-icon">📦</div>
+                <div>
+                    <div class="num" th:text="${totalStock}">0</div>
+                    <div class="label">库存总量</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图表区（ECharts） -->
+        <div class="dash-row">
+            <div class="dash-panel">
+                <h3>📊 商品库存 TOP5</h3>
+                <div id="stockChart" class="chart-box">🐳 图表加载中...</div>
+            </div>
+            <div class="dash-panel">
+                <h3>🏷️ 品牌商品分布</h3>
+                <div id="brandChart" class="chart-box">🐳 图表加载中...</div>
+            </div>
+        </div>
+
+        <!-- 最新商品 -->
+        <div class="dash-panel full">
+            <h3>🛍️ 最新商品</h3>
+            <div class="table-card">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>图片</th>
+                        <th>商品名称</th>
+                        <th>品牌</th>
+                        <th>价格</th>
+                        <th>库存</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${recentProducts}">
+                        <td>
+                            <img class="thumb" th:if="${p.image != null and !p.image.isEmpty()}" th:src="${p.image}" th:alt="${p.name}">
+                            <span class="thumb-placeholder" th:if="${p.image == null or p.image.isEmpty()}">🐳</span>
+                        </td>
+                        <td th:text="${p.name}">商品名</td>
+                        <td th:text="${p.brandName}">品牌</td>
+                        <td th:text="'¥' + ${p.price}">价格</td>
+                        <td th:text="${p.stock}">库存</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"
+        onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js'"></script>
+<script th:inline="javascript">
+    var stockNames = /*[[${stockNames}]]*/ [];
+    var stockValues = /*[[${stockValues}]]*/ [];
+    var brandNames = /*[[${brandNames}]]*/ [];
+    var brandValues = /*[[${brandValues}]]*/ [];
+
+    if (window.echarts) {
+        // 柱状图：商品库存 TOP5
+        var stockChart = echarts.init(document.getElementById('stockChart'));
+        stockChart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { left: 10, right: 20, top: 30, bottom: 10, containLabel: true },
+            xAxis: {
+                type: 'category',
+                data: stockNames,
+                axisLabel: { color: '#8aa0b8', interval: 0, rotate: stockNames.length > 3 ? 20 : 0 },
+                axisLine: { lineStyle: { color: '#d7e9ff' } },
+                axisTick: { show: false }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: { color: '#8aa0b8' },
+                splitLine: { lineStyle: { color: '#eef4fb' } }
+            },
+            series: [{
+                type: 'bar',
+                data: stockValues,
+                barWidth: 30,
+                itemStyle: {
+                    borderRadius: [10, 10, 0, 0],
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#4facfe' },
+                        { offset: 1, color: '#00f2fe' }
+                    ])
+                }
+            }]
+        });
+
+        // 环形饼图：品牌商品分布
+        var brandData = brandNames.map(function (n, i) {
+            return { name: n, value: brandValues[i] };
+        });
+        var brandChart = echarts.init(document.getElementById('brandChart'));
+        brandChart.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}：{c} 件（{d}%）' },
+            color: ['#4facfe', '#43e97b', '#f6d365', '#f093fb', '#38f9d7', '#fda085', '#a18cd1', '#ff9a9e'],
+            legend: { bottom: 0, textStyle: { color: '#8aa0b8', fontSize: 12 } },
+            series: [{
+                type: 'pie',
+                radius: ['42%', '68%'],
+                center: ['50%', '45%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 8, borderColor: '#fff', borderWidth: 2 },
+                label: { show: false },
+                emphasis: { label: { show: true, fontSize: 16, fontWeight: 'bold', color: '#2b3a55' } },
+                data: brandData
+            }]
+        });
+
+        // 窗口大小变化时自适应
+        window.addEventListener('resize', function () {
+            stockChart.resize();
+            brandChart.resize();
+        });
+    } else {
+        document.getElementById('stockChart').innerHTML = '⚠️ 图表库加载失败，请检查网络连接';
+        document.getElementById('brandChart').innerHTML = '⚠️ 图表库加载失败，请检查网络连接';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('我的购物车')}"></head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" th:href="@{/}"><span class="whale">🐳</span>小蓝鲸商城</a>
+        <div class="nav-links">
+            <a th:href="@{/}">🌊 继续购物</a>
+            <span style="color:#fff" th:text="'你好，' + ${session.loginCustomer.username}">你好</span>
+            <a th:href="@{/logout}">退出</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="section-title">🛒 我的购物车</h2>
+
+    <div class="table-card" th:if="${items != null and !items.isEmpty()}">
+        <table class="table cart-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="checkAll" onchange="toggleAll()" checked></th>
+                <th>商品</th>
+                <th>品牌</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="cart-item" th:each="item : ${items}" th:attr="data-price=${item.price}">
+                <td>
+                    <input type="checkbox" class="cart-item-checkbox" onchange="calcTotal()" checked>
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img class="thumb" th:if="${item.image != null and !item.image.isEmpty()}"
+                             th:src="${item.image}" th:alt="${item.productName}">
+                        <span class="thumb-placeholder" th:if="${item.image == null or item.image.isEmpty()}">🐳</span>
+                        <span th:text="${item.productName}">商品名</span>
+                    </div>
+                </td>
+                <td th:text="${item.brandName}">品牌</td>
+                <td th:text="'¥' + ${item.price}">单价</td>
+                <td>
+                    <form th:action="@{/cart/update}" method="post" style="display:flex; gap:8px; align-items:center;">
+                        <input type="hidden" name="id" th:value="${item.id}">
+                        <input type="number" class="qty-input" name="quantity" min="1"
+                               th:value="${item.quantity}" onchange="calcTotal()">
+                        <button class="btn btn-sm" type="submit">更新</button>
+                    </form>
+                </td>
+                <td class="subtotal">¥0.00</td>
+                <td>
+                    <a class="btn btn-sm btn-danger" th:href="@{/cart/delete/{id}(id=${item.id})}"
+                       onclick="return confirm('确定从购物车删除该商品吗？')">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-footer">
+            <div>
+                <label style="font-weight:600; color:#2b3a55;">
+                    <input type="checkbox" id="checkAll2" onchange="syncAll()" checked> 全选
+                </label>
+                <span style="margin-left:16px; color:#8aa0b8;" id="selectedCount">已选 0 件</span>
+            </div>
+            <div class="cart-total">
+                合计：<span class="num" id="totalPrice">¥0.00</span>
+            </div>
+        </div>
+
+        <div style="padding:18px; border-top:1px solid #eef4fb; background:#fff;">
+            <form th:action="@{/cart/checkout}" method="post" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <input class="form-control" style="width:140px;" type="text" name="receiver" placeholder="收货人" required>
+                <input class="form-control" style="width:170px;" type="text" name="phone" placeholder="联系电话" required>
+                <input class="form-control" style="flex:1; min-width:200px;" type="text" name="address" placeholder="收货地址" required>
+                <button class="btn" type="submit">去结算 🧾</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="empty-tip" th:if="${items == null or items.isEmpty()}">
+        🐳 购物车空空如也，快去挑选喜欢的商品吧～
+        <br><br><a class="btn" th:href="@{/}">去逛逛</a>
+    </div>
+</div>
+
+<div class="footer">小蓝鲸商城 · 蓝色可爱主题</div>
+
+<script>
+    function calcTotal() {
+        let total = 0, count = 0;
+        document.querySelectorAll('.cart-item').forEach(row => {
+            const price = parseFloat(row.dataset.price) || 0;
+            const qty = parseInt(row.querySelector('.qty-input').value) || 1;
+            const sub = price * qty;
+            row.querySelector('.subtotal').innerText = '¥' + sub.toFixed(2);
+            if (row.querySelector('.cart-item-checkbox').checked) {
+                total += sub;
+                count += qty;
+            }
+        });
+        document.getElementById('totalPrice').innerText = '¥' + total.toFixed(2);
+        document.getElementById('selectedCount').innerText = '已选 ' + count + ' 件';
+        // 同步两个"全选"框状态
+        const all = document.querySelectorAll('.cart-item-checkbox');
+        const allChecked = all.length > 0 && Array.from(all).every(cb => cb.checked);
+        document.getElementById('checkAll').checked = allChecked;
+        document.getElementById('checkAll2').checked = allChecked;
+    }
+
+    function toggleAll() {
+        const checked = document.getElementById('checkAll').checked;
+        document.querySelectorAll('.cart-item-checkbox').forEach(cb => cb.checked = checked);
+        calcTotal();
+    }
+
+    function syncAll() {
+        document.getElementById('checkAll').checked = document.getElementById('checkAll2').checked;
+        toggleAll();
+    }
+
+    calcTotal();
+</script>
+
+</body>
+</html>

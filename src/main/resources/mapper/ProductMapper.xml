@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaolanjing.mapper.ProductMapper">
+
+    <!-- 联表查询带出品牌名 -->
+    <sql id="productColumns">
+        SELECT p.*, b.name AS brand_name
+        FROM product p LEFT JOIN brand b ON p.brand_id = b.id
+    </sql>
+
+    <select id="findAll" resultType="Product">
+        <include refid="productColumns"/>
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="findByBrandId" resultType="Product">
+        <include refid="productColumns"/>
+        WHERE p.brand_id = #{brandId}
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="findByBrandName" resultType="Product">
+        <include refid="productColumns"/>
+        WHERE b.name LIKE CONCAT('%', #{brandName}, '%')
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="findById" resultType="Product">
+        <include refid="productColumns"/>
+        WHERE p.id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product(name, brand_id, price, stock, description, image)
+        VALUES (#{name}, #{brandId}, #{price}, #{stock}, #{description}, #{image})
+    </insert>
+
+    <update id="update" parameterType="Product">
+        UPDATE product
+        SET name = #{name}, brand_id = #{brandId}, price = #{price},
+            stock = #{stock}, description = #{description}, image = #{image}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product WHERE id = #{id}
+    </delete>
+
+    <update id="updateStock">
+        UPDATE product SET stock = #{stock} WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('编辑满减活动')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('full-reduction')}"></aside>
+    <main class="admin-main">
+        <h2 th:text="${fr.id == null} ? '➕ 新增活动' : '✏️ 编辑活动'">满减活动表单</h2>
+        <div class="table-card" style="padding:24px; max-width:640px;">
+            <form th:action="${fr.id == null} ? '/admin/full-reduction/add' : '/admin/full-reduction/update'" method="post">
+                <input type="hidden" name="id" th:value="${fr.id}">
+                <div class="form-group"><label>活动名称</label><input class="form-control" type="text" name="name" th:value="${fr.name}" required></div>
+                <div class="form-group"><label>满（元）</label><input class="form-control" type="number" step="0.01" name="fullAmount" th:value="${fr.fullAmount}" required></div>
+                <div class="form-group"><label>减（元）</label><input class="form-control" type="number" step="0.01" name="reduceAmount" th:value="${fr.reduceAmount}" required></div>
+                <div class="form-group"><label>开始时间</label><input class="form-control" type="datetime-local" name="startTime" th:value="${fr.startTime}"></div>
+                <div class="form-group"><label>结束时间</label><input class="form-control" type="datetime-local" name="endTime" th:value="${fr.endTime}"></div>
+                <div class="form-group"><label>状态</label>
+                    <select class="form-control" name="status">
+                        <option value="1" th:selected="${fr.status == null or fr.status == 1}">✅ 启用</option>
+                        <option value="0" th:selected="${fr.status != null and fr.status == 0}">⛔ 停用</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn" type="submit">💾 保存</button>
+                    <a class="btn btn-gray" th:href="@{/admin/full-reduction}">返回</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

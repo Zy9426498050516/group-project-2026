@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('数据迁移')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('migrate')}"></aside>
+    <main class="admin-main">
+        <h2>🔄 数据迁移</h2>
+        <div class="table-card" style="padding:24px; max-width:720px;">
+            <h3>迁移说明</h3>
+            <p style="margin:12px 0; line-height:1.8;">
+                数据迁移用于在服务器 / 环境之间转移数据库数据。推荐使用 Navicat Premium 16 完成：
+            </p>
+            <ol style="margin-left:20px; line-height:2;">
+                <li>导出：在源库右键 → <strong>转储 SQL 文件</strong> → 结构与数据。</li>
+                <li>导入：在目标库右键 → <strong>运行 SQL 文件</strong> → 选择导出的 .sql 文件。</li>
+            </ol>
+            <p style="margin-top:12px; color:#8aa0b8;">💡 本系统的初始化脚本位于项目 <code>sql/xiaolanjing.sql</code>，可直接用于新环境建库。</p>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('用户分析')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('analysis-user')}"></aside>
+    <main class="admin-main">
+        <h2>👥 用户分析</h2>
+        <div class="stat-grid">
+            <div class="stat-card blue"><div class="stat-icon">👥</div><div><div class="num" th:text="${customerCount}">0</div><div class="label">顾客总数</div></div></div>
+        </div>
+        <div class="dash-panel full">
+            <h3>🏆 消费排行 TOP10</h3>
+            <div class="table-card">
+                <table class="table">
+                    <thead><tr><th>用户名</th><th>订单数</th><th>消费总额</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${topCustomers}">
+                        <td th:text="${row.name}">用户名</td>
+                        <td th:text="${row.orderCount}">订单数</td>
+                        <td th:text="'¥' + ${row.amount}">消费额</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

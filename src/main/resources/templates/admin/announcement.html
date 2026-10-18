@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('公告管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('announcement')}"></aside>
+    <main class="admin-main">
+        <div class="toolbar">
+            <h2>📢 公告管理</h2>
+            <a class="btn" th:href="@{/admin/announcement/add}">➕ 新增公告</a>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>标题</th><th>内容</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="a : ${announcements}">
+                    <td th:text="${a.id}">1</td>
+                    <td th:text="${a.title}">标题</td>
+                    <td th:text="${a.content}" style="max-width:320px;">内容</td>
+                    <td th:text="${a.status == 1 ? '✅ 启用' : '⛔ 禁用'}">启用</td>
+                    <td th:text="${a.createTime}">时间</td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn btn-sm" th:href="@{/admin/announcement/edit/{id}(id=${a.id})}">编辑</a>
+                            <a class="btn btn-sm btn-danger" th:href="@{/admin/announcement/delete/{id}(id=${a.id})}" onclick="return confirm('确定删除？')">删除</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

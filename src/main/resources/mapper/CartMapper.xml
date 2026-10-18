@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaolanjing.mapper.CartMapper">
+
+    <select id="findByCustomerId" resultType="CartVO">
+        SELECT c.id, c.customer_id, c.product_id, c.quantity,
+               p.name AS product_name, p.price, p.image, p.stock,
+               b.name AS brand_name
+        FROM cart c
+        JOIN product p ON c.product_id = p.id
+        LEFT JOIN brand b ON p.brand_id = b.id
+        WHERE c.customer_id = #{customerId}
+        ORDER BY c.id DESC
+    </select>
+
+    <select id="findByCustomerIdAndProductId" resultType="Cart">
+        SELECT * FROM cart WHERE customer_id = #{customerId} AND product_id = #{productId}
+    </select>
+
+    <insert id="insert" parameterType="Cart" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cart(customer_id, product_id, quantity) VALUES (#{customerId}, #{productId}, #{quantity})
+    </insert>
+
+    <update id="updateQuantity">
+        UPDATE cart SET quantity = #{quantity} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM cart WHERE id = #{id}
+    </delete>
+
+</mapper>

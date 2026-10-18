@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('用户管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('user-list')}"></aside>
+    <main class="admin-main">
+        <h2>👥 用户管理</h2>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>用户名</th><th>注册时间</th><th>重置密码</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}">1</td>
+                    <td th:text="${u.username}">用户名</td>
+                    <td th:text="${u.createTime}">时间</td>
+                    <td>
+                        <form th:action="@{/admin/ops/user/reset}" method="post" style="display:flex; gap:8px;">
+                            <input type="hidden" name="id" th:value="${u.id}">
+                            <input class="form-control" style="width:140px;" type="text" name="password" placeholder="新密码" required>
+                            <button class="btn btn-sm" type="submit">重置</button>
+                        </form>
+                    </td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{/admin/ops/user/delete/{id}(id=${u.id})}" onclick="return confirm('确定删除该用户？')">删除</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

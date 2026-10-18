@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('商家审核')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('store-review')}"></aside>
+    <main class="admin-main">
+        <h2>🏪 同行商家审核</h2>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>店铺名称</th><th>店主</th><th>电话</th><th>状态</th><th>申请时间</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="s : ${stores}">
+                    <td th:text="${s.id}">1</td>
+                    <td th:text="${s.name}">店铺</td>
+                    <td th:text="${s.ownerName}">店主</td>
+                    <td th:text="${s.phone}">电话</td>
+                    <td>
+                        <span th:text="${s.status == 0 ? '🕐 待审核' : (s.status == 1 ? '✅ 已通过' : '❌ 已拒绝')}">状态</span>
+                    </td>
+                    <td th:text="${s.createTime}">时间</td>
+                    <td>
+                        <div class="actions">
+                            <form th:if="${s.status == 0}" th:action="@{/admin/store/review/status}" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${s.id}">
+                                <input type="hidden" name="status" value="1">
+                                <button class="btn btn-sm" type="submit">通过</button>
+                            </form>
+                            <form th:if="${s.status == 0}" th:action="@{/admin/store/review/status}" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${s.id}">
+                                <input type="hidden" name="status" value="2">
+                                <button class="btn btn-sm btn-gray" type="submit">拒绝</button>
+                            </form>
+                            <a class="btn btn-sm btn-danger" th:href="@{/admin/store/delete/{id}(id=${s.id})}" onclick="return confirm('确定删除该店铺？')">删除</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

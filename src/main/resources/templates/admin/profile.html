@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('我的资料')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('profile')}"></aside>
+    <main class="admin-main">
+        <h2>👤 我的资料</h2>
+        <div class="table-card" style="padding:24px; max-width:560px; margin-bottom:20px;">
+            <p><strong>管理员账号：</strong><span th:text="${admin.username}"></span></p>
+            <p><strong>账号 ID：</strong><span th:text="${admin.id}"></span></p>
+            <p><strong>创建时间：</strong><span th:text="${admin.createTime}"></span></p>
+        </div>
+        <h2>🔑 修改密码</h2>
+        <div class="table-card" style="padding:24px; max-width:560px;">
+            <div class="error-msg" th:if="${error}" th:text="${error}"></div>
+            <form th:action="@{/admin/profile/password}" method="post">
+                <div class="form-group"><label>原密码</label><input class="form-control" type="password" name="oldPassword" required></div>
+                <div class="form-group"><label>新密码</label><input class="form-control" type="password" name="newPassword" required></div>
+                <button class="btn" type="submit">修改密码</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

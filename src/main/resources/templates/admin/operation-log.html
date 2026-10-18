@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('操作日志')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('log')}"></aside>
+    <main class="admin-main">
+        <h2>📋 操作日志</h2>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>管理员</th><th>操作内容</th><th>IP</th><th>时间</th></tr></thead>
+                <tbody>
+                <tr th:each="log : ${logs}">
+                    <td th:text="${log.id}">1</td>
+                    <td th:text="${log.adminName}">管理员</td>
+                    <td th:text="${log.operation}">操作</td>
+                    <td th:text="${log.ip}">IP</td>
+                    <td th:text="${log.createTime}">时间</td>
+                </tr>
+                <tr th:if="${logs == null or logs.isEmpty()}">
+                    <td colspan="5" class="empty-tip">暂无操作日志 🐳</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

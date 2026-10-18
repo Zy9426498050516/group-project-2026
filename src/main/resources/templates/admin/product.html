@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('商品管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('product')}"></aside>
+    <main class="admin-main">
+        <h2>🛍️ 商品管理</h2>
+
+        <div class="toolbar">
+            <span style="color:#8aa0b8;">共 <span th:text="${products.size()}">0</span> 件商品</span>
+            <a class="btn" th:href="@{/admin/product/add}">➕ 新增商品</a>
+        </div>
+
+        <div class="table-card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>图片</th>
+                    <th>商品名称</th>
+                    <th>品牌</th>
+                    <th>价格</th>
+                    <th>库存</th>
+                    <th>增减库存</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${products}">
+                    <td th:text="${p.id}">1</td>
+                    <td>
+                        <img class="thumb" th:if="${p.image != null and !p.image.isEmpty()}" th:src="${p.image}" th:alt="${p.name}">
+                        <span class="thumb-placeholder" th:if="${p.image == null or p.image.isEmpty()}">🐳</span>
+                    </td>
+                    <td th:text="${p.name}">商品名</td>
+                    <td th:text="${p.brandName}">品牌</td>
+                    <td th:text="'¥' + ${p.price}">价格</td>
+                    <td th:text="${p.stock}">0</td>
+                    <td>
+                        <form th:action="@{/admin/product/stock}" method="post" class="stock-form">
+                            <input type="hidden" name="productId" th:value="${p.id}">
+                            <input type="number" name="amount" value="1" min="1">
+                            <button class="mini-btn in" name="action" value="in" title="增加库存">＋</button>
+                            <button class="mini-btn out" name="action" value="out" title="减少库存">－</button>
+                        </form>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn btn-sm" th:href="@{/admin/product/edit/{id}(id=${p.id})}">编辑</a>
+                            <a class="btn btn-sm btn-danger" th:href="@{/admin/product/delete/{id}(id=${p.id})}"
+                               onclick="return confirm('确定删除该商品吗？')">删除</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

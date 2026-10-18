@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('分类管理')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('category')}"></aside>
+    <main class="admin-main">
+        <h2>📂 分类管理</h2>
+        <div class="table-card" style="padding:20px; margin-bottom:20px; max-width:720px;">
+            <form th:action="@{/admin/category/add}" method="post" style="display:flex; gap:10px; flex-wrap:wrap;">
+                <input class="form-control" style="flex:1; min-width:140px;" type="text" name="name" placeholder="分类名称" required>
+                <input class="form-control" style="width:90px;" type="number" name="sortOrder" value="0" min="0">
+                <button class="btn" type="submit">➕ 新增</button>
+            </form>
+        </div>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>ID</th><th>分类名称</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="c : ${categories}">
+                    <td th:text="${c.id}">1</td>
+                    <td>
+                        <form th:action="@{/admin/category/update}" method="post" style="display:flex; gap:8px; align-items:center;">
+                            <input type="hidden" name="id" th:value="${c.id}">
+                            <input class="form-control" style="width:160px;" type="text" name="name" th:value="${c.name}" required>
+                            <input class="form-control" style="width:70px;" type="number" name="sortOrder" th:value="${c.sortOrder}">
+                            <select class="form-control" style="width:80px;" name="status">
+                                <option value="1" th:selected="${c.status == 1}">启用</option>
+                                <option value="0" th:selected="${c.status == 0}">禁用</option>
+                            </select>
+                            <button class="btn btn-sm" type="submit">保存</button>
+                        </form>
+                    </td>
+                    <td th:text="${c.sortOrder}">0</td>
+                    <td th:text="${c.status == 1 ? '✅ 启用' : '⛔ 禁用'}">启用</td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{/admin/category/delete/{id}(id=${c.id})}" onclick="return confirm('确定删除该分类吗？')">删除</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

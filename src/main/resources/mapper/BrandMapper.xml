@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaolanjing.mapper.BrandMapper">
+
+    <select id="findAll" resultType="Brand">
+        SELECT * FROM brand ORDER BY id
+    </select>
+
+    <select id="findById" resultType="Brand">
+        SELECT * FROM brand WHERE id = #{id}
+    </select>
+
+    <select id="findByName" resultType="Brand">
+        SELECT * FROM brand WHERE name = #{name}
+    </select>
+
+    <insert id="insert" parameterType="Brand" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO brand(name) VALUES (#{name})
+    </insert>
+
+    <update id="update" parameterType="Brand">
+        UPDATE brand SET name = #{name} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM brand WHERE id = #{id}
+    </delete>
+
+</mapper>

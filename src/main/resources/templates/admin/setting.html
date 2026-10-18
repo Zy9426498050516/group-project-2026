@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('系统设置')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('setting')}"></aside>
+    <main class="admin-main">
+        <h2>⚙️ 系统设置</h2>
+        <div class="table-card">
+            <table class="table">
+                <thead><tr><th>配置项</th><th>配置值</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="c : ${configs}">
+                    <td th:text="${c.configKey}">key</td>
+                    <td>
+                        <form th:action="@{/admin/profile/setting/update}" method="post" style="display:flex; gap:8px;">
+                            <input type="hidden" name="id" th:value="${c.id}">
+                            <input class="form-control" style="flex:1;" type="text" name="configValue" th:value="${c.configValue}" required>
+                            <button class="btn btn-sm" type="submit">保存</button>
+                        </form>
+                    </td>
+                    <td><span class="label" style="color:#8aa0b8;">只读键值</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

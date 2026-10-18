@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/fragments :: head('编辑优惠券')}"></head>
+<body>
+<header th:replace="~{common/fragments :: admin-header}"></header>
+<div class="admin-layout">
+    <aside th:replace="~{common/fragments :: admin-sidebar('coupon')}"></aside>
+    <main class="admin-main">
+        <h2 th:text="${coupon.id == null} ? '➕ 新增优惠券' : '✏️ 编辑优惠券'">优惠券表单</h2>
+        <div class="table-card" style="padding:24px; max-width:640px;">
+            <form th:action="${coupon.id == null} ? '/admin/coupon/add' : '/admin/coupon/update'" method="post">
+                <input type="hidden" name="id" th:value="${coupon.id}">
+                <div class="form-group"><label>名称</label><input class="form-control" type="text" name="name" th:value="${coupon.name}" required></div>
+                <div class="form-group"><label>面额（元）</label><input class="form-control" type="number" step="0.01" name="amount" th:value="${coupon.amount}" required></div>
+                <div class="form-group"><label>使用门槛（满多少可用，元）</label><input class="form-control" type="number" step="0.01" name="minAmount" th:value="${coupon.minAmount}" value="0"></div>
+                <div class="form-group"><label>发放数量</label><input class="form-control" type="number" name="totalCount" th:value="${coupon.totalCount}" value="0"></div>
+                <div class="form-group"><label>开始时间</label><input class="form-control" type="datetime-local" name="startTime" th:value="${coupon.startTime}"></div>
+                <div class="form-group"><label>结束时间</label><input class="form-control" type="datetime-local" name="endTime" th:value="${coupon.endTime}"></div>
+                <div class="form-group"><label>状态</label>
+                    <select class="form-control" name="status">
+                        <option value="1" th:selected="${coupon.status == null or coupon.status == 1}">✅ 启用</option>
+                        <option value="0" th:selected="${coupon.status != null and coupon.status == 0}">⛔ 停用</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn" type="submit">💾 保存</button>
+                    <a class="btn btn-gray" th:href="@{/admin/coupon}">返回</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>
